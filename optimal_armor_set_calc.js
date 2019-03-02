@@ -12,27 +12,39 @@ var legs = [["Famed Pon Leggings",87,22],["Ursine Trousers",78,18],["Wolven Shin
 var boots = [["Diamond Boots",64,18],["Steel Boots",52,14],["Tate's Spiked Cleats",52,20],["Leather Lunde Shoes",35,7],
              ["Cloth Shoes",33,5]];
 
+// current_set variables will be the sums of the cost and armor values of each set 
 var current_set_cost, current_set_armor_value;
+// best_set_so_far will track the names of the pieces of armor in the best set
+// best_so_far will track the highest armor value we have seen yet
 var best_set_so_far = []
 var best_so_far = 0;
+// i figure i may as well add this for the answer display
+var cost_of_best_set_so_far;
+// these will be used to access the arrays
 var i, j, k, l, extra_index;
 
+// four nested for loops to cover all combinations of: 1 helm, 1 chest, 1 leg, 1 boot
 for (i = 0; i < helms.length; i++){
   for (j = 0; j < chests.length; j++){
     for (k = 0; k < legs.length; k++){
       for (l = 0; l < boots.length; l++){
+        // only if there are more helms to the "right" of the current helmet at i
         if (i+1 < helms.length){
           extra_index = i+1;
+          // we will check the cost and armor value of each set, with helmets as the extra piece
           while (extra_index < helms.length){
             current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + helms[extra_index][1];
             current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + helms[extra_index][2];
+            // if we can afford this set and if it is stronger than our best set yet, save the info
             if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
               best_so_far = current_set_armor_value;
               best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], helms[extra_index][0]];
+              cost_of_best_set_so_far = current_set_cost;
             }
             extra_index++;
           }
         }
+        // same as the logic above but for chests as the extra piece
         if (j+1 < chests.length){
           extra_index = j+1;
           while (extra_index < chests.length){
@@ -41,10 +53,12 @@ for (i = 0; i < helms.length; i++){
             if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
               best_so_far = current_set_armor_value;
               best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], chests[extra_index][0]];
+              cost_of_best_set_so_far = current_set_cost;
             }
             extra_index++;
           }
         }
+        // again for legs
         if (k+1 < legs.length){
           extra_index = k+1;
           while (extra_index < legs.length){
@@ -53,10 +67,12 @@ for (i = 0; i < helms.length; i++){
             if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
               best_so_far = current_set_armor_value;
               best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], legs[extra_index][0]];
+              cost_of_best_set_so_far = current_set_cost;
             }
             extra_index++;
           }
         }
+        // and once more for boots
         if (l+1 < boots.length){
           extra_index = l+1;
           while (extra_index < boots.length){
@@ -65,6 +81,7 @@ for (i = 0; i < helms.length; i++){
             if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
               best_so_far = current_set_armor_value;
               best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], boots[extra_index][0]];
+              cost_of_best_set_so_far = current_set_cost;
             }
             extra_index++;
           }
@@ -73,3 +90,12 @@ for (i = 0; i < helms.length; i++){
     }
   }
 }
+
+// display our answer
+if (best_so_far == 0)
+  console.log("Oh NOOO! You really oughta get some more money, Pal. You can't afford even the worst set of armor here.");
+else
+  console.log("The strongest armor set available for our brave Geralt, costing " + cost_of_best_set_so_far +" crowns, will include:\n" +
+           best_set_so_far[0] + "\n" + best_set_so_far[1] + "\n" +
+           best_set_so_far[2] + "\n" + best_set_so_far[3] + "\n" +
+           best_set_so_far[4] + "\nAnd I guess just in case you're curious, this set will have an armor value of " + best_so_far + ".");
