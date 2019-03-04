@@ -28,63 +28,54 @@ for (i = 0; i < helms.length; i++){
   for (j = 0; j < chests.length; j++){
     for (k = 0; k < legs.length; k++){
       for (l = 0; l < boots.length; l++){
-        // only if there are more helms to the "right" of the current helmet at i
-        if (i+1 < helms.length){
-          extra_index = i+1;
-          // we will check the cost and armor value of each set, with helmets as the extra piece
-          while (extra_index < helms.length){
-            current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + helms[extra_index][1];
-            current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + helms[extra_index][2];
-            // if we can afford this set and if it is stronger than our best set yet, save the info
-            if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
-              best_so_far = current_set_armor_value;
-              best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], helms[extra_index][0]];
-              cost_of_best_set_so_far = current_set_cost;
-            }
-            extra_index++;
+        // we will check the cost and armor value of each set, with helmets as the extra piece
+        extra_index = i;
+        while (extra_index < helms.length){
+          current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + helms[extra_index][1];
+          current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + helms[extra_index][2];
+          // if we can afford this set and if it is stronger than our best set yet, save the info
+          if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
+            best_so_far = current_set_armor_value;
+            best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], helms[extra_index][0]];
+            cost_of_best_set_so_far = current_set_cost;
           }
+          extra_index++;
         }
         // same as the logic above but for chests as the extra piece
-        if (j+1 < chests.length){
-          extra_index = j+1;
-          while (extra_index < chests.length){
-            current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + chests[extra_index][1];
-            current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + chests[extra_index][2];
-            if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
-              best_so_far = current_set_armor_value;
-              best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], chests[extra_index][0]];
-              cost_of_best_set_so_far = current_set_cost;
-            }
-            extra_index++;
+        extra_index = j;
+        while (extra_index < chests.length){
+          current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + chests[extra_index][1];
+          current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + chests[extra_index][2];
+          if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
+            best_so_far = current_set_armor_value;
+            best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], chests[extra_index][0]];
+            cost_of_best_set_so_far = current_set_cost;
           }
+          extra_index++;
         }
         // again for legs
-        if (k+1 < legs.length){
-          extra_index = k+1;
-          while (extra_index < legs.length){
-            current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + legs[extra_index][1];
-            current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + legs[extra_index][2];
-            if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
-              best_so_far = current_set_armor_value;
-              best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], legs[extra_index][0]];
-              cost_of_best_set_so_far = current_set_cost;
-            }
-            extra_index++;
+        extra_index = k;
+        while (extra_index < legs.length){
+          current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + legs[extra_index][1];
+          current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + legs[extra_index][2];
+          if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
+            best_so_far = current_set_armor_value;
+            best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], legs[extra_index][0]];
+            cost_of_best_set_so_far = current_set_cost;
           }
+          extra_index++;
         }
         // and once more for boots
-        if (l+1 < boots.length){
-          extra_index = l+1;
-          while (extra_index < boots.length){
-            current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + boots[extra_index][1];
-            current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + boots[extra_index][2];
-            if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
-              best_so_far = current_set_armor_value;
-              best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], boots[extra_index][0]];
-              cost_of_best_set_so_far = current_set_cost;
-            }
-            extra_index++;
+        extra_index = l;
+        while (extra_index < boots.length){
+          current_set_cost = helms[i][1] + chests[j][1] + legs[k][1] + boots[l][1] + boots[extra_index][1];
+          current_set_armor_value = helms[i][2] + chests[j][2] + legs[k][2] + boots[l][2] + boots[extra_index][2];
+          if (current_set_cost <= crowns_available && current_set_armor_value > best_so_far){
+            best_so_far = current_set_armor_value;
+            best_set_so_far = [helms[i][0], chests[j][0], legs[k][0], boots[l][0], boots[extra_index][0]];
+            cost_of_best_set_so_far = current_set_cost;
           }
+          extra_index++;
         }
       }
     }
