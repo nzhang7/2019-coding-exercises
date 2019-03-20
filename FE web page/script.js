@@ -1,5 +1,9 @@
+// Author: Nathan Zhang
+
+// the container we will put our divs into
+const app = document.getElementById("container");
+
 // one div for each of the "latest news" items
-const app = document.getElementById("root");
 for (let h = 0; h < 320; h++){
 	const newDiv = document.createElement("div");
 	newDiv.setAttribute("id","data"+h);
@@ -26,7 +30,6 @@ for (let i = 0; i <= 15; i++){
 		var data = JSON.parse(this.response);
 		// will store a comma-delimited string for the comments api query
 		var ids;
-		
 		// this is for me ok
 		console.log(data);
 		
@@ -40,25 +43,66 @@ for (let i = 0; i <= 15; i++){
 			
 			// this is the div we will insert data into
 			var dataElem = document.getElementById("data" + (i*20 + j));
+			// store what we will append to dataElem later rather than appending over and over again
+			var dataToAppend = "";
+			// variable to store the article headline or the video title, we will use it immediately below but store it for later as well
+			var itemTitle = "";
 			
-			// articles in the api have headlines while videos have titles, and so we must differentiate them accordingly
-			// if it's an article, it's an article. if it's not, it's a movie. we are also adding those things to our HTML
-			if (data.data[j].contentType == "article")
-				dataElem.innerHTML += data.data[j].metadata.headline;
+			// originally used for the indented comment below, this if/else will now do a few more things that depend on whether an item was an article or video
+				// articles in the api have headlines while videos have titles, and so we must differentiate them accordingly
+				// if it's an article, it's an article. if it's not, it's a movie. we are also adding those things to our HTML
+			if (data.data[j].contentType == "article"){
+				// set the class of the containing div accordingly
+				dataElem.setAttribute("class", "data article");
+				itemTitle = data.data[j].metadata.headline;
+				dataToAppend += "<span class=\"title\">" + itemTitle + "</span>";
+			}
 			else {
-				dataElem.innerHTML += data.data[j].metadata.title;
+				dataElem.setAttribute("class", "data video");
+				itemTitle = data.data[j].metadata.title;
+				dataToAppend += "<span class=\"title\">" + itemTitle + "</span>";
+				
 				// we can also use this if/else to take the duration for videos
-				dataElem.innerHTML += data.data[j].metadata.duration;
+				var vidDur = data.data[j].metadata.duration;
+				// and convert the number of seconds to a format that looks more natural
+				var formattedDur = "";
+				var hours, minutes, seconds;
+				hours = Math.floor(vidDur/3600);
+				minutes = Math.floor(vidDur%3600/60);
+				seconds = vidDur % 60;
+				// if the video is at least an hour
+				if (hours > 0){
+					formattedDur = hours + ":";
+					// we need to pad the minutes with a 0 to the left if it's a single digit
+					if (minutes < 10)
+						formattedDur += "0" + minutes + ":";
+					else
+						formattedDur += minutes + ":";
+					// and then the same for seconds
+					if (seconds < 10)
+						formattedDur += "0" + seconds;
+					else
+						formattedDur += seconds;
+				}
+				else {
+					formattedDur = minutes + ":";
+					if (seconds < 10)
+						formattedDur += "0" + seconds;
+					else
+						formattedDur += seconds;
+				}
+				dataToAppend += "<span class=\"video-duration\">" + formattedDur + "</span>";
 			}
 			
-			// added if statement as a couple API items had empty thumbnail arrays, causing a typeError
+			// added if statement as a couple API items had empty thumbnail arrays at some point, causing a typeError
 			if (data.data[j].thumbnails.length > 0)
-				// insert the thumbnail images into our HTML
-				dataElem.innerHTML += "<img src=\"" + data.data[j].thumbnails[2].url + "\">";
+				// append the thumbnail images onto the string for our HTML
+				dataToAppend += "<img class=\"thumbnail\" src=\"" + data.data[j].thumbnails[2].url + "\" alt=\"" + itemTitle + "\">";
 			
 			// the date each post was published on
 			var datePublished = new Date(data.data[j].metadata.publishDate);
 			var yearsAgo = 0;
+			var timeAgo = "";
 			// let's look at the date that is one year after the publish date
 			datePublished.setUTCFullYear(datePublished.getUTCFullYear() + 1);
 			// if this new date is still in the past,
@@ -68,7 +112,7 @@ for (let i = 0; i <= 15; i++){
 					datePublished.setUTCFullYear(datePublished.getUTCFullYear() + 1);
 					yearsAgo++;
 				}
-				dataElem.innerHTML += yearsAgo + "y";
+				timeAgo += yearsAgo + "y";
 			}
 			else {
 				var monthsAgo = 0;
@@ -82,7 +126,7 @@ for (let i = 0; i <= 15; i++){
 						datePublished.setUTCMonth(datePublished.getUTCMonth() + 1);
 						monthsAgo++;
 					}
-					dataElem.innerHTML += monthsAgo + "mo";
+					timeAgo += monthsAgo + "mo";
 				}
 				else {
 					// if it's not even a month old, do the same for days
@@ -94,7 +138,7 @@ for (let i = 0; i <= 15; i++){
 							datePublished.setUTCDate(datePublished.getUTCDate() + 1);
 							daysAgo++;
 						}
-						dataElem.innerHTML += daysAgo + "d";
+						timeAgo += daysAgo + "d";
 					}
 					else {
 						// if it's not even a day old, do the same for hours...
@@ -106,7 +150,7 @@ for (let i = 0; i <= 15; i++){
 								datePublished.setUTCHours(datePublished.getUTCHours() + 1);
 								hoursAgo++;
 							}
-							dataElem.innerHTML += hoursAgo + "h";
+							timeAgo += hoursAgo + "h";
 						}
 						else{
 							// and finally, the minutes
@@ -118,15 +162,18 @@ for (let i = 0; i <= 15; i++){
 									datePublished.setUTCMinutes(datePublished.getUTCMinutes() + 1);
 									minutesAgo++;
 								}
-								dataElem.innerHTML += minutesAgo + "m";
+								timeAgo += minutesAgo + "m";
 							}
 							else
 								// if it's not even one full minute old, that is what we will display
-								dataElem.innerHTML += "0m";
+								timeAgo += "0m";
 						}
 					}
 				}
 			}
+			dataToAppend += "<span class=\"timeago\">"+ timeAgo + "</span>";
+			// finally append the information we have taken from content API
+			dataElem.innerHTML += dataToAppend;
 		}
 		// xhr request for comments endpoint each time we have a full query string to use
 		commentRequests[i] = new XMLHttpRequest();
@@ -137,8 +184,8 @@ for (let i = 0; i <= 15; i++){
 			console.log(i, alsoData);
 			// add the comment counts to the HTML
 			for (let k = 0; k < 20; k++){
-				document.getElementById("data" + (i*20 + k)).innerHTML += alsoData.content[k].count;
-			}
+				document.getElementById("data" + (i*20 + k)).innerHTML += "<span class=\"comments\">" + alsoData.content[k].count + "</span>";
+			}	
 		}
 		commentRequests[i].send();
 		//console.log(ids);
