@@ -3,11 +3,27 @@
 // the container we will put our divs into
 const app = document.getElementById("container");
 
-// one div for each of the "latest news" items
-for (let h = 0; h < 320; h++){
-	const newDiv = document.createElement("div");
-	newDiv.setAttribute("id","data"+h);
-	app.appendChild(newDiv);
+// one article for each of the "latest news" items
+for (let i = 0; i < 320; i++){
+	var newArt = document.createElement("article");
+	newArt.setAttribute("id","data"+i);
+	newArt.setAttribute("class","data");
+	app.appendChild(newArt);
+}
+
+// let's make "smaller" containers to put within each article (got errors trying to do it in the loop above)
+for (let i = 0; i < 320; i++){
+	var art = document.getElementById("data"+i);
+	// one for the thumbnail, the time since post and comment count, and title
+	var newThumb = document.createElement("div");
+	newThumb.setAttribute("class","thumbnail-container");
+	var newTimeComm = document.createElement("div");
+	newTimeComm.setAttribute("class","time-comm-container");
+	var newTitle = document.createElement("div");
+	newTitle.setAttribute("class","title-container");
+	art.appendChild(newThumb);
+	art.appendChild(newTimeComm);
+	art.appendChild(newTitle);
 }
 
 // an array of request variables for the content endpoints that we will assign xmlhttprequests to soon
@@ -16,6 +32,35 @@ var contentRequests = [];
 var commentRequests = [];
 // create a date object, will be used later to determine how long ago an item was posted
 var now = new Date();
+
+function tabViews(evt, viewType){
+	// variables for the HTML elements we need
+	var tabButton, tabData, tabVideos, tabArticles;
+	tabData = document.getElementsByClassName("data");
+	tabVideos = document.getElementsByClassName("video");
+	tabArticles = document.getElementsByClassName("article");
+	tabButton = document.getElementsByClassName("tab-button");
+	// hide the items that do not correspond to our button press
+	for (let i = 0; i < tabData.length; i++)
+		tabData[i].style.display = "none";
+	// when a button is pressed, take the active class away from all of them
+	for (let i = 0; i < tabButton.length; i++)
+		tabButton[i].className = tabButton[i].className.replace (" active", "");
+	// display items when a button is pressed
+	if (viewType == "data"){		
+		for (let i = 0; i < tabData.length; i++)
+			tabData[i].style.display = "inline-block";
+	}
+	else if (viewType == "video"){
+		for (let i = 0; i < tabVideos.length; i++)
+			tabVideos[i].style.display = "inline-block";
+	}
+	else
+		for (let i = 0; i < tabArticles.length; i++)
+			tabArticles[i].style.display = "inline-block";
+	// add the active class to whichever button was pressed
+	evt.currentTarget.className += " active";
+}
 
 // i want to gather information from all entries of the api, startindex goes up to 300 and 20 can be displayed at once
 // 300/20 = 15, our upper limit on the for loop
@@ -30,8 +75,6 @@ for (let i = 0; i <= 15; i++){
 		var data = JSON.parse(this.response);
 		// will store a comma-delimited string for the comments api query
 		var ids;
-		// this is for me ok
-		console.log(data);
 		
 		// here, we will look at and do things with the data we've pulled
 		for (let j = 0; j < 20; j++){						
@@ -41,26 +84,26 @@ for (let i = 0; i <= 15; i++){
 			else
 				ids += "," + data.data[j].contentId;
 			
-			// this is the div we will insert data into
+			// this is the article we will insert data into
 			var dataElem = document.getElementById("data" + (i*20 + j));
-			// store what we will append to dataElem later rather than appending over and over again
-			var dataToAppend = "";
+			
 			// variable to store the article headline or the video title, we will use it immediately below but store it for later as well
 			var itemTitle = "";
-			
-			// originally used for the indented comment below, this if/else will now do a few more things that depend on whether an item was an article or video
+
+			// originally used for the indented comments below, this if/else will now do a few more things that depend on whether an item was an article or video
 				// articles in the api have headlines while videos have titles, and so we must differentiate them accordingly
-				// if it's an article, it's an article. if it's not, it's a movie. we are also adding those things to our HTML
+				// if it's an article, it's an article. if it's not, it's a video. we are also adding those things to our HTML
 			if (data.data[j].contentType == "article"){
-				// set the class of the containing div accordingly
-				dataElem.setAttribute("class", "data article");
+				// add class to the containing div accordingly
+				dataElem.classList.add("article");
 				itemTitle = data.data[j].metadata.headline;
-				dataToAppend += "<span class=\"title\">" + itemTitle + "</span>";
+				// insert the title as HTML into it's container
+				dataElem.getElementsByClassName("title-container")[0].insertAdjacentHTML("afterbegin", itemTitle);
 			}
 			else {
-				dataElem.setAttribute("class", "data video");
+				dataElem.classList.add("video");
 				itemTitle = data.data[j].metadata.title;
-				dataToAppend += "<span class=\"title\">" + itemTitle + "</span>";
+				dataElem.getElementsByClassName("title-container")[0].insertAdjacentHTML("afterbegin", itemTitle);
 				
 				// we can also use this if/else to take the duration for videos
 				var vidDur = data.data[j].metadata.duration;
@@ -91,13 +134,17 @@ for (let i = 0; i <= 15; i++){
 					else
 						formattedDur += seconds;
 				}
-				dataToAppend += "<span class=\"video-duration\">" + formattedDur + "</span>";
+				// insert the video duration into the thumbnail container in it's own span since it won't be the only thing in that container
+				dataElem.getElementsByClassName("thumbnail-container")[0].insertAdjacentHTML("afterbegin",
+					"<span class=\"video-duration\"> <img class=\"duration-icon\" src=\"icons/red-play-button-icon.png\" alt=\"red play button\">" 
+					+ formattedDur + "</span>");
 			}
 			
 			// added if statement as a couple API items had empty thumbnail arrays at some point, causing a typeError
 			if (data.data[j].thumbnails.length > 0)
-				// append the thumbnail images onto the string for our HTML
-				dataToAppend += "<img class=\"thumbnail\" src=\"" + data.data[j].thumbnails[2].url + "\" alt=\"" + itemTitle + "\">";
+				// insert the thumbnail into it's container
+				dataElem.getElementsByClassName("thumbnail-container")[0].insertAdjacentHTML("afterbegin",
+					"<img class=\"thumbnail\" src=\"" + data.data[j].thumbnails[2].url + "\" alt=\"" + itemTitle + "\">");
 			
 			// the date each post was published on
 			var datePublished = new Date(data.data[j].metadata.publishDate);
@@ -171,9 +218,7 @@ for (let i = 0; i <= 15; i++){
 					}
 				}
 			}
-			dataToAppend += "<span class=\"timeago\">"+ timeAgo + "</span>";
-			// finally append the information we have taken from content API
-			dataElem.innerHTML += dataToAppend;
+			dataElem.getElementsByClassName("time-comm-container")[0].insertAdjacentHTML("afterbegin", "<span class=\"timeago\">"+ timeAgo + "</span>");
 		}
 		// xhr request for comments endpoint each time we have a full query string to use
 		commentRequests[i] = new XMLHttpRequest();
@@ -184,7 +229,15 @@ for (let i = 0; i <= 15; i++){
 			console.log(i, alsoData);
 			// add the comment counts to the HTML
 			for (let k = 0; k < 20; k++){
-				document.getElementById("data" + (i*20 + k)).innerHTML += "<span class=\"comments\">" + alsoData.content[k].count + "</span>";
+				// if there are no comments, don't show a number
+				if (alsoData.content[k].count == 0)
+					document.getElementById("data" + (i*20 + k)).getElementsByClassName("time-comm-container")[0]
+					.insertAdjacentHTML("beforeend", "•<img class=\"comment-icon\" src=\"icons/chat-bubble-icon.png\" alt=\"comment icon\">" + 
+					"<span class=\"comments\"></span>");
+				else
+					document.getElementById("data" + (i*20 + k)).getElementsByClassName("time-comm-container")[0]
+					.insertAdjacentHTML("beforeend", "•<img class=\"comment-icon\" src=\"icons/chat-bubble-icon.png\" alt=\"comment icon\">" + 
+					"<span class=\"comments\">" + alsoData.content[k].count + "</span>");
 			}	
 		}
 		commentRequests[i].send();
