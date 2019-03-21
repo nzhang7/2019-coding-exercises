@@ -33,7 +33,27 @@ var commentRequests = [];
 // create a date object, will be used later to determine how long ago an item was posted
 var now = new Date();
 
-function tabViews(evt, viewType){
+// when a tab button is pressed, call this function
+function fadeOut(evt, viewType){
+	// store the event target to pass onto our tabviews function
+	target = evt.currentTarget;
+	var opacity = 1;
+	// every .1 seconds after a tab is clicked, decrease the opacity by 10% until our content is completely transparent
+	var timer = setInterval(function(){
+		if (opacity > 0){
+			app.style.opacity = opacity;
+			opacity -= .1;
+			}
+		// once our content is fully transparent: set our view to be visible again, stop the timer, call function to change which content is shown
+		else {
+			app.style.opacity = 1;
+			clearInterval(timer);
+			tabViews(target, viewType);
+			}
+		}, 100);
+}
+
+function tabViews(tgt, viewType){
 	// variables for the HTML elements we need
 	var tabButton, tabData, tabVideos, tabArticles;
 	tabData = document.getElementsByClassName("data");
@@ -59,8 +79,10 @@ function tabViews(evt, viewType){
 		for (let i = 0; i < tabArticles.length; i++)
 			tabArticles[i].style.display = "inline-block";
 	// add the active class to whichever button was pressed
-	evt.currentTarget.className += " active";
+	tgt.className += " active";
 }
+
+//dataElem.classList.add("article");
 
 // i want to gather information from all entries of the api, startindex goes up to 300 and 20 can be displayed at once
 // 300/20 = 15, our upper limit on the for loop
@@ -98,12 +120,14 @@ for (let i = 0; i <= 15; i++){
 				dataElem.classList.add("article");
 				itemTitle = data.data[j].metadata.headline;
 				// insert the title as HTML into it's container
-				dataElem.getElementsByClassName("title-container")[0].insertAdjacentHTML("afterbegin", itemTitle);
+				dataElem.getElementsByClassName("title-container")[0].insertAdjacentHTML("afterbegin",
+				"<a href>" + itemTitle + "</a>");
 			}
 			else {
 				dataElem.classList.add("video");
 				itemTitle = data.data[j].metadata.title;
-				dataElem.getElementsByClassName("title-container")[0].insertAdjacentHTML("afterbegin", itemTitle);
+				dataElem.getElementsByClassName("title-container")[0].insertAdjacentHTML("afterbegin", 
+				"<a href>" + itemTitle + "</a>");
 				
 				// we can also use this if/else to take the duration for videos
 				var vidDur = data.data[j].metadata.duration;
@@ -136,15 +160,15 @@ for (let i = 0; i <= 15; i++){
 				}
 				// insert the video duration into the thumbnail container in it's own span since it won't be the only thing in that container
 				dataElem.getElementsByClassName("thumbnail-container")[0].insertAdjacentHTML("afterbegin",
-					"<span class=\"video-duration\"> <img class=\"duration-icon\" src=\"icons/red-play-button-icon.png\" alt=\"red play button\">" 
-					+ formattedDur + "</span>");
+					"<a href><span class=\"video-duration\"> <img class=\"duration-icon\" src=\"icons/red-play-button-icon.png\" alt=\"red play button\">" 
+					+ formattedDur + "</span></a>");
 			}
 			
 			// added if statement as a couple API items had empty thumbnail arrays at some point, causing a typeError
 			if (data.data[j].thumbnails.length > 0)
 				// insert the thumbnail into it's container
 				dataElem.getElementsByClassName("thumbnail-container")[0].insertAdjacentHTML("afterbegin",
-					"<img class=\"thumbnail\" src=\"" + data.data[j].thumbnails[2].url + "\" alt=\"" + itemTitle + "\">");
+					"<a href><img class=\"thumbnail\" src=\"" + data.data[j].thumbnails[2].url + "\" alt=\"" + itemTitle + "\"></a>");
 			
 			// the date each post was published on
 			var datePublished = new Date(data.data[j].metadata.publishDate);
