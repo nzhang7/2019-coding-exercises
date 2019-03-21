@@ -33,24 +33,30 @@ var commentRequests = [];
 // create a date object, will be used later to determine how long ago an item was posted
 var now = new Date();
 
+// the timer will hold the ID given to it by the setInterval function, which gives non-zero numerical values
+var timer = 0;
 // when a tab button is pressed, call this function
 function fadeOut(evt, viewType){
-	// store the event target to pass onto our tabviews function
-	target = evt.currentTarget;
-	var opacity = 1;
-	// every .1 seconds after a tab is clicked, decrease the opacity by 10% until our content is completely transparent
-	var timer = setInterval(function(){
-		if (opacity > 0){
-			app.style.opacity = opacity;
-			opacity -= .1;
+	// only let a button press matter if the animation is not playing
+	if (timer == 0){
+		// store the event target to pass onto our tabviews function
+		target = evt.currentTarget;
+		var opacity = 1;
+		// every .1 seconds after a tab is clicked, decrease the opacity by 10% until our content is completely transparent
+		timer = setInterval(function(){
+			if (opacity > 0){
+				app.style.opacity = opacity;
+				opacity -= .1;
 			}
-		// once our content is fully transparent: set our view to be visible again, stop the timer, call function to change which content is shown
-		else {
-			app.style.opacity = 1;
-			clearInterval(timer);
-			tabViews(target, viewType);
+			// once our content is fully transparent: set our view to be visible again, stop the timer, call function to change which content is shown
+			else {
+				app.style.opacity = 1;
+				clearInterval(timer);
+				timer = 0;
+				tabViews(target, viewType);
 			}
 		}, 100);
+	}
 }
 
 function tabViews(tgt, viewType){
