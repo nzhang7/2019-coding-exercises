@@ -89,7 +89,7 @@ header h1 {
 
 .thumbnail-container {
 	position: relative;
-	max-width: 48%;
+	width: 48%;
 	float: left;
 	display: inline-block;
 	margin-right: 4%;
