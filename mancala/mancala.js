@@ -51,37 +51,38 @@ function move(){
 
 // check some things after the move has ended
 function afterMove(){		
+	// not including big pits,
+	if (!(pitToPlace == 0 || pitToPlace == 7)){
+		// if the last pit we placed a pebble in only has one pebble, that means we landed in a pit that Was empty
+		// when this happens, we capture our one pebble and all of the pebbles from the pit opposite to it 
+		if (board[pitToPlace-1] == 1){
+			// but this only applies when you land in an empty pit on your side of the board
+			if (whoseTurn == 0 && pitToPlace - 1 < 6){
+				// add the pebbles from the opposite pit to your big pit and empty the opposite pit
+				opposite(pitToPlace-1);
+				board[6] += board[pitToPlace-1] + board[pitOpposite];
+				board[pitToPlace-1] = 0;
+				board[pitOpposite] = 0;
+			}
+			else if (whoseTurn == 1 && pitToPlace > 6){
+				opposite(pitToPlace-1);
+				board[13] += board[pitToPlace-1] + board[pitOpposite];
+				board[pitToPlace-1] = 0;
+				board[pitOpposite] = 0;
+			}
+		} // if we landed in a small pit, our turn is over
+		if (whoseTurn == 1)
+			whoseTurn = 0;
+		else if (whoseTurn == 0)
+			whoseTurn = 1;
+	}
 	// if either player's entire side of small pits is empty, the game comes to an end
 	// the remaining pebbles on your side are captured by you
 	if (board[0] + board[1] + board[2] + board[3] + board[4] + board[5] == 0 ||
 		board[7] + board[8] + board[9] + board[10] + board[11] + board[12] == 0)
 		gameEnds();
-	// not including big pits
-	if (!(pitToPlace == 0 || pitToPlace == 7){
-		// if the last pit we placed a pebble in only has one pebble, that means we landed in a pit that Was empty
-		// when this happens, we capture all of the pebbles from the pit opposite to it
-		if (board[pitToPlace-1] == 1)){
-			// but this only applies when you land in an empty pit on your side of the board
-			if (whoseTurn == 0 && pitToPlace < 6){
-				// add the pebbles from the opposite pit to your big pit and empty the opposite pit
-				opposite(pitToPlace-1);
-				board[6] += board[pitOpposite];
-				board[pitOpposite] = 0;
-			}
-			else if (whoseTurn == 1 && pitToPlace > 6){
-				opposite(pitToPlace-1);
-				board[13] += board[pitOpposite];
-				board[pitOpposite] = 0;
-			}
-		} // if we landed in a small pit that already has at least one pebble, our turn simply ends
-		else{
-			if (whoseTurn == 1)
-				whoseTurn = 0;
-			else if (whoseTurn == 0)
-				whoseTurn = 1;
-		}
-	}
 	// if we land in our big pit, we get another turn. we do not need code for this since the whoseTurn variable is already properly set
+	
 }
 
 // takes the pit opposite to the one passed into the function and stores it in pitOpposite
@@ -117,5 +118,24 @@ function aiThinking(){
 }
 
 function gameEnds(){
-	
+	for (let i = 0; i < 6; i++)
+	{
+		board[6] += board[i];
+		board[i] = 0;
+	}
+	for (let i = 7; i < 13; i++){
+		board[13] += board[i];
+		board[i] = 0;
+	}
+	if (board[6] > board[13])
+		console.log("player wins");
+	else if (board[6] < board[13])
+		console.log("computer wins");
+	else
+		console.log("this match ended in a tie");
+}
+
+function playerChoice(pitChoice){
+	pitChosen = pitChoice;
+	move();
 }
