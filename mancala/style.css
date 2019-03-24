@@ -9,10 +9,11 @@ box-sizing: border-box;
 }
 
 .container {
+	text-align: center;
 	display: grid;
-	height: 80vh;
+	height: 75vh;
 	width: 90vw;
-	margin: 10vh 5vw;
+	margin: 5vw;
 	grid-template-columns: repeat(8, 12.5%);
 	grid-template-rows: repeat(2, 50%);
 }
@@ -20,28 +21,33 @@ box-sizing: border-box;
 .pit {
 	margin: 5%;
 	border-radius: 8px;
+	font-weight: 600;
+	font-size: 400%;
 }
 
 #pit13 {
 	grid-column-start: 1;
 	grid-row: 1 / span 2;
 	background-color: #a7ff84;
+	color: green;
 }
 
 #pit6 {
 	grid-column-start: 8;
-	grid-row-start: 1;
-	grid-row-end: 3;
+	grid-row: 1 / span 2;
 	background-color: #84caff;
+	color: blue;
 }
 
 .small-player-pit {
 	grid-row-start: 2;
+	color: blue;
 	background-color: #84caff;
 }
 
 .small-computer-pit {
 	grid-row-start: 1;
+	color: green;
 	background-color: #a7ff84;
 }
 
@@ -91,4 +97,15 @@ box-sizing: border-box;
 
 #pit12 {
 	grid-column-start: 2;
+}
+
+#play {
+	grid-column: 4 / span 2;
+}
+
+#state {
+	margin: auto;
+	text-align: center;
+	position: relative;
+	top: 5vh;
 }
