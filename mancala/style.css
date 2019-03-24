@@ -1,0 +1,94 @@
+/*
+	author: Nathan Zhang
+	optional bonus (mancala) stylesheet
+*/
+
+
+* {
+box-sizing: border-box;
+}
+
+.container {
+	display: grid;
+	height: 80vh;
+	width: 90vw;
+	margin: 10vh 5vw;
+	grid-template-columns: repeat(8, 12.5%);
+	grid-template-rows: repeat(2, 50%);
+}
+
+.pit {
+	margin: 5%;
+	border-radius: 8px;
+}
+
+#pit13 {
+	grid-column-start: 1;
+	grid-row: 1 / span 2;
+	background-color: #a7ff84;
+}
+
+#pit6 {
+	grid-column-start: 8;
+	grid-row-start: 1;
+	grid-row-end: 3;
+	background-color: #84caff;
+}
+
+.small-player-pit {
+	grid-row-start: 2;
+	background-color: #84caff;
+}
+
+.small-computer-pit {
+	grid-row-start: 1;
+	background-color: #a7ff84;
+}
+
+#pit0 {
+	grid-column-start: 2;
+}
+
+#pit1 {
+	grid-column-start: 3;
+}
+
+#pit2 {
+	grid-column-start: 4;
+}
+
+#pit3 {
+	grid-column-start: 5;
+}
+
+#pit4 {
+	grid-column-start: 6;
+}
+
+#pit5 {
+	grid-column-start: 7;
+}
+
+#pit7 {
+	grid-column-start: 7;
+}
+
+#pit8 {
+	grid-column-start: 6;
+}
+
+#pit9 {
+	grid-column-start: 5;
+}
+
+#pit10 {
+	grid-column-start: 4;
+}
+
+#pit11 {
+	grid-column-start: 3;
+}
+
+#pit12 {
+	grid-column-start: 2;
+}
