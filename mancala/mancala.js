@@ -1,36 +1,67 @@
 // Author: Nathan Zhang
+var realBoard = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
 
-// 0 = player's turn, 1 = computer's turn
-var whoseTurn;
 // just for reference, our mancala board will look like
 //    | 12 | 11 | 10 |  9 |  8 |  7 |
 // 13 |----|----|----|----|----|----| 6
 //    |  0 |  1 |  2 |  3 |  4 |  5 |
-// initialize the number of pebbles in each pit
-var realBoard = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
+var pitElements = [];
+for (let i = 0; i < 14; i++)
+	pitElements[i] = document.getElementById("pit" + i);
+
+function startGame(){
+	gameOver = 0;
+	// initialize the number of pebbles in each pit
+	realBoard = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
+	// move our board values into the HTML
+	for (let i = 0; i < 14; i++){
+		if (i != 6 && i != 13)
+			pitElements[i].innerHTML = 4;
+		else
+			pitElements[i].innerHTML = 0;
+	}
+	// randomly returns 0 or 1
+	whoseTurn = Math.round(Math.random());
+	// if the computer goes first, tell it to think
+	playButton.disabled = true;
+	if (whoseTurn == 1){
+		gameState.innerHTML = "computer's turn";
+		// give the computer a couple of seconds to pretend it's thinking
+		thinking = 1;
+		timer = setInterval(function(){
+			if (thinking > 0){
+				thinking -= .1;
+			}
+			else {
+				clearInterval(timer)
+				greedyAiThinking(realBoard);
+			}
+		}, 200);
+	}
+	else
+		gameState.innerHTML = "player's turn";
+}
+
+// 0 = player's turn, 1 = computer's turn
+var whoseTurn;
 // pebbles in hand
 var currentPebbleCount;
 // the pit the player or computer chose to empty out
 var pitChosen;
 // the pit we will place a pebble in
 var pitToPlace;
-
 // this will be used in a function that tells us which pit is opposite to it
 var pitOpposite;
-
-var pitElements = [];
-for (let i = 0; i < 14; i++){
-	pitElements[i] = document.getElementById("pit" + i);
-	if (i != 6 && i != 13)
-		pitElements[i].innerHTML = 4;
-	else
-		pitElements[i].innerHTML = 0;
-}
-// randomly returns 0 or 1
-function whoFirst(){
-	whoseTurn = Math.round(Math.random());
-}
-
+// get our button element
+var playButton = document.getElementById("play");
+// get our state element
+var gameState = document.getElementById("state");
+// this will hold the ID for setInterval
+var timer;
+// variable for computer's "think" time
+var thinking;
+// game has ended = 1
+var gameOver;
 // perform a move based on the pit that was chosen
 // this function now takes a board and bool as its parameters, so it can also be used for the computer's thought process
 function move(board, realMove){
@@ -101,37 +132,54 @@ function afterMove(board, realMove){
 	if (board[0] + board[1] + board[2] + board[3] + board[4] + board[5] == 0 ||
 		board[7] + board[8] + board[9] + board[10] + board[11] + board[12] == 0)
 		gameEnds(board, realMove);
-	
-	if(realMove){
-	console.log(board[12] + " " + board[11] + " " + board[10] + " " + board[9] + " " + board[8] + " " + board[7] + "\n" + 
-	board[13] + "         " + board[6] + "\n" +
-	board[0] + " " + board[1] + " " + board[2] + " " + board[3] + " " + board[4] + " " + board[5]);
-	console.log(whoseTurn);}
-	
-	// if we landed in a small pit and the game is not over, our turn is over
-	if (!(pitToPlace == 0 || pitToPlace == 7)){
-		// only end the computer's turn if it was a real move
-		if (whoseTurn == 1 && realMove)
-			whoseTurn = 0;
-		// if our turn ended, set the turn to the computer's and tell it to start thinking
-		else if (whoseTurn == 0){
-			whoseTurn = 1;
-			greedyAiThinking(realBoard);
+	// if the game has ended, don't switch turns or think about making any moves
+	if (gameOver == 0){
+		// if we landed in a small pit and the game is not over, our turn is over
+		if (!(pitToPlace == 0 || pitToPlace == 7)){
+			// only end the computer's turn if it was a real move
+			if (whoseTurn == 1 && realMove){
+				gameState.innerHTML = "player's turn";
+				whoseTurn = 0;
+			}
+			// if our turn ended, set the turn to the computer's and tell it to start thinking
+			else if (whoseTurn == 0){
+				whoseTurn = 1;
+				gameState.innerHTML = "computer's turn";
+				thinking = 1;
+				timer = setInterval(function(){
+				if (thinking > 0)
+					thinking -= .1;
+				else {
+					clearInterval(timer);
+					greedyAiThinking(realBoard);
+					}
+				}, 200);
+			}
 		}
-	}
-	
-	// if this was a thinking move, report how many pebbles are in the computer's big pit
-	if (!realMove)
-		pebblesIn13AfterThinking = board[13];
-	
-	// if we land in our big pit, we get another turn. we do not need code for this on the player side since the whoseTurn variable is already properly set
-	// however, we will set a flag here for the computer if it was a move it thought about
-	if (pitToPlace == 0){
+		
+		// if this was a thinking move, report how many pebbles are in the computer's big pit
 		if (!realMove)
-			landedInBig = true;
-	// if it was a real move, tell it to think about its next one
-		else
-			greedyAiThinking(realBoard);
+			pebblesIn13AfterThinking = board[13];
+		
+		// if we land in our big pit, we get another turn. we do not need code for this on the player side since the whoseTurn variable is already properly set
+		// however, we will set a flag here for the computer if it was a move it thought about
+		if (pitToPlace == 0){
+			if (!realMove)
+				landedInBig = true;
+		// if it was a real move, tell it to think about its next one
+			else {
+				thinking = 1;
+				gameState.innerHTML = "computer's turn";
+				timer = setInterval(function(){
+					if (thinking > 0)
+						thinking -= .1;
+					else {
+						clearInterval(timer);
+						greedyAiThinking(realBoard);
+					}
+				}, 200);
+			}
+		}
 	}
 }
 
@@ -215,6 +263,8 @@ function greedyAiThinking(board){
 
 // what happens when an end condition has been reached
 function gameEnds(board, realMove){
+	if (realMove)
+		gameOver = 1;
 	// empty any pebbles remaining into the respective big pit
 	for (let i = 0; i < 6; i++)
 	{
@@ -238,21 +288,19 @@ function gameEnds(board, realMove){
 		pebblesIn13AfterThinking = board[13];
 	
 	if (realMove){
-	console.log(board[12] + " " + board[11] + " " + board[10] + " " + board[9] + " " + board[8] + " " + board[7] + "\n" + 
-	board[13] + "         " + board[6] + "\n" +
-	board[0] + " " + board[1] + " " + board[2] + " " + board[3] + " " + board[4] + " " + board[5]);
-	console.log(whoseTurn);	
-	if (board[6] > board[13])
-		console.log("player wins");
-	else if (board[6] < board[13])
-		console.log("computer wins");
-	else
-		console.log("this match ended in a tie");
+		if (board[6] > board[13])
+			gameState.innerHTML = "Player wins! Press the play button if you'd like to play again.";
+		else if (board[6] < board[13])
+			gameState.innerHTML = "Computer wins! Press the play button if you'd like to play again.";
+		else
+			gameState.innerHTML = "This match was a tie! Press the play button if you'd like to play again.";
+		playButton.disabled = false;
 	}
 }
 
 function playerChoice(pitChoice){
-	if (realBoard[pitChoice] != 0){
+	// do nothing if the player presses an empty pit or if it isn't their turn
+	if (realBoard[pitChoice] != 0 && whoseTurn == 0){
 		pitChosen = pitChoice;
 		move(realBoard, true);
 	}
