@@ -18,6 +18,14 @@ var pitToPlace;
 // this will be used in a function that tells us which pit is opposite to it
 var pitOpposite;
 
+var pitElements = [];
+for (let i = 0; i < 14; i++){
+	pitElements[i] = document.getElementById("pit" + i);
+	if (i != 6 && i != 13)
+		pitElements[i].innerHTML = 4;
+	else
+		pitElements[i].innerHTML = 0;
+}
 // randomly returns 0 or 1
 function whoFirst(){
 	whoseTurn = Math.round(Math.random());
@@ -29,6 +37,8 @@ function move(board, realMove){
 	// take the pebbles from the pit
 	currentPebbleCount = board[pitChosen];
 	board[pitChosen] = 0;
+	if (realMove)
+		pitElements[pitChosen].innerHTML = 0;
 	// move counterclockwise by one pit
 	pitToPlace = pitChosen + 1;
 	// place a pebble and move counterclockwise by one pit until we are out of pebbles
@@ -39,6 +49,8 @@ function move(board, realMove){
 		else {
 			// place a pebble
 			board[pitToPlace]++;
+			if (realMove)
+				pitElements[pitToPlace].innerHTML = board[pitToPlace];
 			currentPebbleCount--;
 			// move counterclockwise by one pit
 			pitToPlace++;
@@ -65,12 +77,22 @@ function afterMove(board, realMove){
 				board[6] += board[pitToPlace-1] + board[pitOpposite];
 				board[pitToPlace-1] = 0;
 				board[pitOpposite] = 0;
+				if (realMove){
+					pitElements[6].innerHTML = board[6];
+					pitElements[pitToPlace-1].innerHTML = 0;
+					pitElements[pitOpposite].innerHTML = 0;
+				}
 			}
 			else if (whoseTurn == 1 && pitToPlace > 6){
 				opposite(pitToPlace-1);
 				board[13] += board[pitToPlace-1] + board[pitOpposite];
 				board[pitToPlace-1] = 0;
 				board[pitOpposite] = 0;
+				if (realMove){
+					pitElements[13].innerHTML = board[13];
+					pitElements[pitToPlace-1].innerHTML = 0;
+					pitElements[pitOpposite].innerHTML = 0;
+				}
 			}
 		} 
 	}
@@ -198,11 +220,19 @@ function gameEnds(board, realMove){
 	{
 		board[6] += board[i];
 		board[i] = 0;
+		if (realMove)
+			pitElements[i].innerHTML = 0;
 	}
+	if (realMove)
+		pitElements[6].innerHTML = board[6];
 	for (let i = 7; i < 13; i++){
 		board[13] += board[i];
 		board[i] = 0;
+		if (realMove)
+			pitElements[i].innerHTML = 0;
 	}
+	if (realMove)
+		pitElements[13].innerHTML = board[13];
 	// if this was a thinking move, report the number of pebbles in big pit
 	if (!realMove)
 		pebblesIn13AfterThinking = board[13];
