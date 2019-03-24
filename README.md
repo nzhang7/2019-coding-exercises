@@ -2,6 +2,10 @@
 
 Hello! This repository will hold my files related to IGN's Code Foo 9.
 
+## Introduction
+
+You can find me all alone in the introduction folder.
+
 ## Required Question 3
 
 Files for question 3 may be found in the optimal armor set calc folder. Included is a standalone javascript program that displays the result in the console and a docx file that discusses its implementation.
