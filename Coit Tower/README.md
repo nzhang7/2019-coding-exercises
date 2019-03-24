@@ -34,3 +34,5 @@ Assume the spheres were randomly packed. The packing density for items randomly 
 Round down since we can't have part of a Poké Ball\
 142,731,111.75 * .64 = 91,347,911.52\
 The Coit Tower can hold 18,124,890 full-sized Poké Balls or 91,347,911 shrunken Poké Balls.
+
+Considerations: The Coit Tower is actually 3 nested cylinders rather than just one. The dimensions used also do not account for thickness of walls. There is no way we can account for objects, floors, or whatever else may be taking up space within the Coit Tower so what should we do? With no ways to obtain any more information, nothing. We simply make note of it rather than randomly or arbitrarily changing values.
