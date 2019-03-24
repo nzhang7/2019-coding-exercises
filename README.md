@@ -4,7 +4,11 @@ Hello! This repository will hold my files related to IGN's Code Foo 9.
 
 ## Introduction
 
-You can find me all alone in the introduction folder.
+You can find me all alone in the Introduction folder.
+
+## Required Question 2
+
+You can find me all alone in the Coit Tower folder.
 
 ## Required Question 3
 
