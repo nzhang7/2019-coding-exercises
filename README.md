@@ -12,7 +12,7 @@ You can find me all alone in the Coit Tower folder.
 
 ## Required Question 3
 
-Files for question 3 may be found in the optimal armor set calc folder. Included is a standalone javascript program that displays the result in the console and a docx file that discusses its implementation.
+Files for question 3 may be found in the optimal armor set calc folder. Included is a standalone javascript program that displays the result in the console and a text file that discusses its implementation.
 
 ## Option 1 - Front End
 
@@ -47,3 +47,7 @@ Requires socket.io and express
 
 #### Medium
 Requires pusher, express, body-parser
+
+## Optional Bonus
+
+For the bonus exercise, I made a game of Mancala. All you have to do to run it is open the HTML file and you will be able to play in your browser. There are many variants on the rules of the game but this [webpage](https://www.thesprucecrafts.com/how-to-play-mancala-409424) has a set that match my implementation.
