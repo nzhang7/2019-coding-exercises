@@ -50,4 +50,4 @@ Requires pusher, express, body-parser
 
 ## Optional Bonus
 
-For the bonus exercise, I made a game of Mancala. All you have to do to run it is open the HTML file and you will be able to play in your browser. There are many variants on the rules of the game but this [webpage](https://www.thesprucecrafts.com/how-to-play-mancala-409424) has a set that match my implementation.
+For the bonus exercise, I made a game of Mancala. All you have to do to run it is open the HTML file and you will be able to play in your browser. There are many variants on the rules of the game but this [webpage](https://www.thesprucecrafts.com/how-to-play-mancala-409424) has a set that matches my implementation.
