@@ -252,6 +252,8 @@ function gameEnds(board, realMove){
 }
 
 function playerChoice(pitChoice){
-	pitChosen = pitChoice;
-	move(realBoard, true);
+	if (realBoard[pitChoice] != 0){
+		pitChosen = pitChoice;
+		move(realBoard, true);
+	}
 }
