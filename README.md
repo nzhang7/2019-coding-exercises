@@ -20,9 +20,9 @@ Files for option 1 may be found in the FE Web Page folder. Everything in this fo
 
 ### Prerequisites
 
-To function properly as is, you will need to install CORS Anywhere. In short, CORS Anywhere was the solution to my cross-origin requests to IGN' API being blocked. You can read more about it [here] (https://github.com/Rob--W/cors-anywhere).
+To function properly as is, you will need to install CORS Anywhere. In short, CORS Anywhere was the solution to my cross-origin requests to IGN' API being blocked. You can read more about it [here](https://github.com/Rob--W/cors-anywhere).
 
-1. Install [Node.js] (http://nodejs.org/)
+1. Install [Node.js](http://nodejs.org/)
 2. Install CORS Anywhere. Navigate to the FE Web Page directory. At a command prompt, enter
 `npm install cors-anywhere`
 This will install CORS Anywhere under the current directory, in `node_modules\cors-anywhere`
