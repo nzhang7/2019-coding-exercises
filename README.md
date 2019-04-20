@@ -1,10 +1,6 @@
-# code_foo_9
+# Coding exercises 
 
-Hello! This repository will hold my files related to IGN's Code Foo 9.
-
-## Introduction
-
-You can find me all alone in the Introduction folder. Haha, so if you happen to see this before downloading and reading the introduction from the actual application form, read it here instead. There were some errors that I hadn't yet fixed. If you already read that other one, it's fine. Close enough.
+Hello! This repository will hold my files related to \[program name removed\].
 
 ## Required Question 2
 
