@@ -12,6 +12,7 @@ Files for question 3 may be found in the optimal armor set calc folder. Included
 
 ## Option 1 - Front End
 
+The gif this exercise is based on can be found [here](https://s3.amazonaws.com/o.www.ign.com/code-foo/2019/static/img/front-end.gif).
 Files for option 1 may be found in the FE Web Page folder. Everything in this folder is linked together so to open the webpage, simply open the HTML in a browser. However, there is something you will need to do first.
 
 ### Prerequisites
