@@ -35,7 +35,7 @@ The height of each HTML article depends on the dimensions of the thumbnail conta
 
 ## Option 4 - Full Stack
 
-Although I have some files for option 4, these are not meant to be evaluated. At the time of writing this, I do not feel like I have enough time remaining before the application deadline to do a great or thorough job on this section. All files within the chat apps folder were made by (very) closely following tutorials and I would not even call them my own. They have been posted here for my own reference as they are still materials related to this option.
+Although I have some files for option 4, these are not meant to be evaluated. All files within the chat apps folder were made by closely following tutorials and I would not call them my own. They have been posted here for my own reference as they are still materials related to this option.
 
 ### Dependencies
 
